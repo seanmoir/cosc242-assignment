@@ -114,14 +114,8 @@ static tree rbt_fix(tree r)
 /*returns null node to represent empty new tree*/
 tree tree_new(tree_t type)
 {
-    tree b = malloc(sizeof *b);
-    b->key = NULL;
-    b->left = NULL;
-    b->right = NULL;
-    b->colour = BLACK;
-    b->frequency = 0;
     tree_type = type;
-    return b;
+    return NULL;
 }
 
 /*
@@ -173,19 +167,19 @@ int tree_search(tree b, char *key)
  */
 tree tree_insert(tree b, char *key)
 {
-    if (b == NULL)
-    {
-        b = tree_new(tree_type);
-    }
+    static int count = 0;
 
     /*if leaf is found allocate new node and insert value into node */
-    if (b->key == NULL)
+    if (b == NULL)
     {
+        b = malloc(sizeof *b);
+        b->left = NULL;
+        b->right = NULL;
         b->key = malloc((strlen(key) + 1) * sizeof key[0]);
         b->key = strcpy(b->key, key);
-        b->colour = RED;
         b->frequency = 1;
-
+        b->colour = count == 0 ? BLACK : RED;
+        count++;
         if (tree_type == RBT)
         {
             return rbt_fix(b);
@@ -240,30 +234,21 @@ void tree_inorder(tree b, void f(char *s))
     tree_inorder(b->left, f);
 
     /* call print method on current node */
-    if (b->key != NULL)
+    tmp = malloc(strlen(b->key) + 20 * sizeof tmp[0]);
+    if (tree_type == RBT)
     {
-        tmp = malloc(strlen(b->key) + 20 * sizeof tmp[0]);
-        if (tree_type == RBT)
-        {
-            strcpy(tmp, IS_BLACK(b) ? "black:\t" : "red:\t");
-            strcat(tmp, b->key);
-            strcat(tmp, "\t");
-            f(tmp);
-        }
-        else
-        {
-            f(b->key);
-        }
+        strcpy(tmp, IS_BLACK(b) ? "black:\t" : "red:\t");
+        strcat(tmp, b->key);
+        f(tmp);
+        free(tmp);
     }
     else
     {
-        return;
+        f(b->key);
     }
-    
 
     /* call self on right subtree recursively */
     tree_inorder(b->right, f);
-
 }
 
 /*
@@ -282,32 +267,24 @@ void tree_preorder(tree b, void f(char *s))
     }
 
     /* call print method on current node */
-    if (b->key != NULL)
+    tmp = malloc(strlen(b->key) + 20 * sizeof tmp[0]);
+    if (tree_type == RBT)
     {
-        tmp = malloc(strlen(b->key) + 20 * sizeof tmp[0]);
-        if (tree_type == RBT)
-        {
-            strcpy(tmp, IS_BLACK(b) ? "black:\t" : "red:\t");
-            strcat(tmp, b->key);
-            f(tmp);
-        }
-        else
-        {
-            f(b->key);
-        }
+        strcpy(tmp, IS_BLACK(b) ? "black:\t" : "red:\t");
+        strcat(tmp, b->key);
+        f(tmp);
+        free(tmp);
     }
     else
     {
-        return;
+        f(b->key);
     }
-    
 
     /* call self on left subtree recursively */
     tree_preorder(b->left, f);
 
     /* call self on right subtree recursively */
     tree_preorder(b->right, f);
-
 }
 
 /*
@@ -331,10 +308,7 @@ tree tree_free(tree b)
     tree_free(b->right);
 
     /* free node and it's key */
-    if(b->key != NULL)
-    {
-        free(b->key);
-    }
+    free(b->key);
     free(b);
     return b;
 }
