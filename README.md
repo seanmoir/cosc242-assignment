@@ -6,3 +6,5 @@
 Sean Moir
 <br>
 Fin Mountfort
+<br>
+Jakob Harvey
