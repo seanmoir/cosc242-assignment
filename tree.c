@@ -22,7 +22,7 @@ struct tree_node
     int frequency;
 };
 
-tree_t tree_type;
+static tree_t tree_type;
 
 static tree right_rotate(tree r)
 {
