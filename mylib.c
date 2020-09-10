@@ -1,16 +1,11 @@
-#include "mylib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
 
+#include "mylib.h"
 
 
-
-
-/**
- method which help to mallocate memory
- */
 void *emalloc(size_t s) {
     void *result = malloc(s);
     if (result == NULL) {
@@ -20,10 +15,7 @@ void *emalloc(size_t s) {
     return result;
 }
 
-/**
- method remallocate memeory given by a pointer and the size
- */
-void *remalloc(void *p, size_t s) {
+void *erealloc(void *p, size_t s) {
     void *result = realloc(p, s);
     if (result == NULL) {
         fprintf(stderr, "memory allocation failed");

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "tree.h"
+#include "mylib.h"
 
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
@@ -213,10 +214,10 @@ tree tree_insert(tree b, char *key)
     /*if leaf is found allocate new node and insert value into node */
     if (b == NULL)
     {
-        b = malloc(sizeof *b);
+        b = emalloc(sizeof *b);
         b->left = NULL;
         b->right = NULL;
-        b->key = malloc((strlen(key) + 1) * sizeof key[0]);
+        b->key = emalloc((strlen(key) + 1) * sizeof key[0]);
         b->key = strcpy(b->key, key);
         b->frequency = 1;
         
