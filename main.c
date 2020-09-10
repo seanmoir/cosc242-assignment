@@ -3,9 +3,10 @@
 
 #include "tree.h"
 
-static void print_key(char *s)
+static void print_key(int freq, char *word)
 {
-    printf("%s\n", s);
+    printf("%-4d %s\n", freq, word);
+
 }
 
 int main()

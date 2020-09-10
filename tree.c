@@ -219,6 +219,7 @@ tree tree_insert(tree b, char *key)
         b->key = malloc((strlen(key) + 1) * sizeof key[0]);
         b->key = strcpy(b->key, key);
         b->frequency = 1;
+        
         b->colour = count == 0 ? BLACK : RED;
         count++;
         if (tree_type == RBT)
@@ -264,7 +265,6 @@ tree tree_insert(tree b, char *key)
  */
 void tree_inorder(tree b, void f(char *s))
 {
-    char *tmp;
     /* if leaf then return to stack */
     if (b == NULL)
     {
@@ -275,28 +275,7 @@ void tree_inorder(tree b, void f(char *s))
     tree_inorder(b->left, f);
 
     /* call print method on current node */
-    tmp = malloc(strlen(b->key) + 20 * sizeof tmp[0]);
-    if (tree_type == RBT)
-    {
-        strcpy(tmp, IS_BLACK(b) ? "black:\t" : "red:\t");
-        strcat(tmp, b->key);
-        f(tmp);
-        free(tmp);
-    }
-    /* Maybe we do this instead of assigning memory to a string and concatenating them?
-    if (tree_type == RBT) {
-        if (IS_RED(b)) {
-            printf("red: ");
-        } else {
-        printf("black: ");
-        }
-    }
     f(b->key);
-    */
-    else
-    {
-        f(b->key);
-    }
 
     /* call self on right subtree recursively */
     tree_inorder(b->right, f);
@@ -308,9 +287,8 @@ void tree_inorder(tree b, void f(char *s))
  * b: (sub)tree to print
  * f: print function used
  */
-void tree_preorder(tree b, void f(char *s))
+void tree_preorder(tree b, void f(int freq, char *word))
 {
-    char *tmp;
     /* if leaf then return to stack */
     if (b == NULL)
     {
@@ -318,18 +296,7 @@ void tree_preorder(tree b, void f(char *s))
     }
 
     /* call print method on current node */
-    tmp = malloc(strlen(b->key) + 20 * sizeof tmp[0]);
-    if (tree_type == RBT)
-    {
-        strcpy(tmp, IS_BLACK(b) ? "black:\t" : "red:\t");
-        strcat(tmp, b->key);
-        f(tmp);
-        free(tmp);
-    }
-    else
-    {
-        f(b->key);
-    }
+    f(b->frequency, b->key);
 
     /* call self on left subtree recursively */
     tree_preorder(b->left, f);
