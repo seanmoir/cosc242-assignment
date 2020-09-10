@@ -242,6 +242,16 @@ void tree_inorder(tree b, void f(char *s))
         f(tmp);
         free(tmp);
     }
+    /* Maybe we do this instead of assigning memory to a string and concatenating them?
+    if (tree_type == RBT) {
+        if (IS_RED(b)) {
+            printf("red: ");
+        } else {
+        printf("black: ");
+        }
+    }
+    f(b->key);
+    */
     else
     {
         f(b->key);
