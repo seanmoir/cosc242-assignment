@@ -25,24 +25,6 @@ struct tree_node
 static tree_t tree_type;
 
 /**
- * Output a DOT description of this tree to the given output stream.
- * DOT is a plain text graph description language (see www.graphviz.org).
- * You can create a viewable graph with the command
- *
- *    dot -Tpdf < graphfile.dot > graphfile.pdf
- *
- * You can also use png, ps, jpg, svg... instead of pdf
- *
- * @param t the tree to output the DOT description of.
- * @param out the stream to write the DOT description to.
- */
-void tree_output_dot(tree t, FILE *out) {
-   fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
-   tree_output_dot_aux(t, out);
-   fprintf(out, "}\n");
-}
-
-/**
  * Traverses the tree writing a DOT description about connections, and
  * possibly colours, to the given output stream.
  *
@@ -63,6 +45,24 @@ static void tree_output_dot_aux(tree t, FILE *out) {
       tree_output_dot_aux(t->right, out);
       fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
    }
+}
+
+/**
+ * Output a DOT description of this tree to the given output stream.
+ * DOT is a plain text graph description language (see www.graphviz.org).
+ * You can create a viewable graph with the command
+ *
+ *    dot -Tpdf < graphfile.dot > graphfile.pdf
+ *
+ * You can also use png, ps, jpg, svg... instead of pdf
+ *
+ * @param t the tree to output the DOT description of.
+ * @param out the stream to write the DOT description to.
+ */
+void tree_output_dot(tree t, FILE *out) {
+   fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
+   tree_output_dot_aux(t, out);
+   fprintf(out, "}\n");
 }
 
 static tree right_rotate(tree r)
@@ -362,4 +362,42 @@ tree tree_free(tree b)
     free(b->key);
     free(b);
     return b;
+}
+
+int tree_depth(tree t)
+{
+    int left, right, depth = 0;
+
+    if(t == NULL)
+    {
+        return depth;
+    }
+
+    if(t->left == NULL)
+    {
+        left = 0;
+    }
+    else
+    {
+        left = tree_depth(t->left);
+    }
+
+
+    if(t->right == NULL)
+    {
+        right = 0;
+    }
+    else
+    {
+        right = tree_depth(t->left);
+    }
+
+    if(right > left)
+    {
+        return 1 + right;
+    }
+    else
+    {
+        return 1 + left;
+    }
 }

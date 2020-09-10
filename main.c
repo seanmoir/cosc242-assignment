@@ -21,6 +21,7 @@ int main()
     printf("\n\n");
     printf("PREORDER\n");
     tree_preorder(b, print_key);
+    printf("\nTREE DEPTH====\n%d\n", tree_depth(b));
 
     tree_free(b);
     return 0;
