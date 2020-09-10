@@ -11,5 +11,6 @@ extern tree tree_insert(tree b, char *key);
 extern int tree_search(tree b, char *key);
 extern void tree_inorder(tree b, void f(char *s));
 extern void tree_preorder(tree b, void f(char *s));
+extern void tree_output_dot_aux(tree t, FILE *out);
 
 #endif
