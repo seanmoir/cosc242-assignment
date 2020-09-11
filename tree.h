@@ -2,7 +2,7 @@
 #define TREE_H_
 
 typedef struct tree_node *tree;
-typedef enum { RED, BLACK} rbt_colour;
+typedef enum { RED, BLACK} tree_colour;
 typedef enum tree_e { BST, RBT } tree_t;
 
 extern tree tree_new(tree_t type);
