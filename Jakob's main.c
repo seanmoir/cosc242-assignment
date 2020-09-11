@@ -124,7 +124,13 @@ int main(int argc, char *argv[]) {
     }
 
     if (h_option == 1) {
-        printf("this is how u use the program");
+        printf("Help - A list of options and the actions they perform\n");
+        printf("-c filename : Check the spelling of words in filename using words read from stdin as the dictionary.\n");
+        printf("-d\n");
+        printf("-f filename\n");
+        printf("-o\n");
+        printf("-r\n");
+        printf("-h\n");
     }
 
     tree_free(t);
