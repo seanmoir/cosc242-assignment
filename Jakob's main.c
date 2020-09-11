@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <getopt.h>
+#include <time.h>
 
 #include "tree.h"
 #include "mylib.h"
@@ -22,18 +23,19 @@ int main(int argc, char *argv[]) {
     int c_option = 0, d_option = 0, f_option = 0,
         o_option = 0, r_option = 0, h_option = 0;
     int unknown_words;
-    FILE *infile;
+    FILE *c_file;
+    FILE *f_file;
+    clock_t fill_start, fill_end, search_start, search_end;
 
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
             case 'c':
                 /* Safely open file*/
-                if (NULL == (infile = fopen(optarg, "r"))) {
+                if (NULL == (c_file = fopen(optarg, "r"))) {
                     fprintf(stderr, "Can't find file '%s'\n", optarg);
                     return EXIT_FAILURE;
                 }
                 c_option = 1;
-                printf("%s", optarg);
                 break;
             case 'd':
                 d_option = 1;
@@ -78,32 +80,54 @@ int main(int argc, char *argv[]) {
     if (c_option == 1) {
         input = malloc(100 * sizeof input);
         unknown_words = 0;
-        
-        /**/
-        
-        
+
         /* Insert stdin to tree*/
+        fill_start = clock();
         while (getword(input, 99, stdin) != EOF) {
             t = tree_insert(t, input);
         }
+        fill_end = clock();
 
         /* Read each word from filename*/
-        while (getword(input, 99, infile) != EOF) {
+        search_start = clock();
+        while (getword(input, 99, c_file) != EOF) {
             if (tree_search(t, input) == 0) {
                 fprintf(stdout, "%s\n", input);
                 unknown_words++;
             }
         }
+        search_end = clock();
 
-        fclose(infile);
+        fclose(c_file);
+        free(input);
 
-        fprintf(stderr, ""); /*fill time and search time*/ 
-        fprintf(stderr, "");
+        fprintf(stderr, "Fill time\t: %f\n",
+                (fill_end - fill_start) / (double)CLOCKS_PER_SEC);
+        fprintf(stderr, "Search time\t: %f\n",
+                (search_end - search_start) / (double)CLOCKS_PER_SEC);
         fprintf(stderr, "Unknown words = %d\n", unknown_words);
         
     }
 
-    tree_inorder(t, print_key);
+    if (d_option == 1) {
+        printf("%d\n", tree_depth(t));
+        o_option = 0;
+        r_option = 0;
+        h_option = 0;
+    }
+
+    if (o_option == 1) {
+        /*do dot stuff*/
+        if (f_option == 1) {           
+        } else {
+        }
+    }
+
+    if (h_option == 1) {
+        printf("this is how u use the program");
+    }
+
+    tree_free(t);
     
     return EXIT_SUCCESS;
 }
