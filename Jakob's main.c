@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (c_option == 1) {
-        input = malloc(100 * sizeof input);
+        input = emalloc(100 * sizeof input);
         unknown_words = 0;
 
         /* Insert stdin to tree*/
