@@ -1,12 +1,25 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <getopt.h>
-#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-#include "tree.h"
 #include "mylib.h"
+#include "tree.h"
 
+/**
+ * Main program file, managing command line arguments and interfacing with Tree
+ * ADT
+ * @author Sean Moir
+ * @author Jakob Harbey
+ * @author Fin Mountford
+ */
+
+/**
+ * Prints the frequency and value of a node given to it
+ * @param freq: frequency of node
+ * @param word: value of node
+ */
 static void print_info(int freq, char *word)
 {
     printf("%-4d %s\n", freq, word);
@@ -15,39 +28,24 @@ static void print_info(int freq, char *word)
 int main(int argc, char *argv[])
 {
     const char *optstring = "c:df:orh";
-    char option = '\0';
-    char input[255] = "\0";
-    char *f_filename = "";
+    char option, input[255], *f_filename;
+    int c_option, d_option, f_option, o_option, r_option, h_option;
+    int unknown_words;
+    FILE *c_file, *o_file;
+    clock_t fill, search;
+    tree t;
 
-    tree t = NULL;
-
-    /* argument booleans */
-    int c_option = 0, d_option = 0, f_option = 0;
-    int o_option = 0, r_option = 0, h_option = 0;
-    int unknown_words = 0;
-
-    /* pointer for files used for -c and -o arguments */
-    FILE *c_file = NULL;
-    FILE *o_file = NULL;
-
-    /* timers */
-    clock_t fill = 0, search = 0;
-
-    /* process arguments */
     while ((option = getopt(argc, argv, optstring)) != EOF)
     {
         switch (option)
         {
         case 'c':
-            c_file = open_file(optarg, "r");
             c_option = 1;
             break;
         case 'd':
             d_option = 1;
             break;
         case 'f':
-            f_filename = emalloc((strlen(optarg) + 1) * sizeof f_filename);
-            strcpy(f_filename, optarg);
             f_option = 1;
             break;
         case 'o':
@@ -56,12 +54,29 @@ int main(int argc, char *argv[])
         case 'r':
             r_option = 1;
             break;
-        case 'h':
-            h_option = 1;
-            break;
         default:
-            printf("Invalid option. Please use -h for help\n");
+            h_option = 1;
         }
+    }
+
+    /* option h */
+    if (h_option == 1)
+    {
+        printf("Help - A list of options and the actions they perform\n");
+
+        printf("-c filename : Check the spelling of words in filename using ");
+        printf("words read from stdin as the dictionary.\n");
+
+        printf("-d\n");
+        printf("-f filename\n");
+        printf("-o\n");
+        printf("-r\n");
+        printf("-h\n");
+
+        /* dont create tree or add any values as help menu was invoked, print
+         * help menu and terminate 
+         */
+        return EXIT_SUCCESS;
     }
 
     /* Check if want a BST or RBT*/
@@ -75,22 +90,10 @@ int main(int argc, char *argv[])
     }
     fill = clock() - fill;
 
-    if (o_option == 1)
-    {
-        if (f_option == 0)
-        {
-            f_filename = "tree-view.dot";
-        }
-        o_file = open_file(f_filename, "w");
-        printf("Creating dot file '%s'\n", f_filename);
-        tree_output_dot(t, o_file);
-        fclose(o_file);
-        free(f_filename);
-    }
-
     /* option c*/
     if (c_option == 1)
     {
+        c_file = open_file(optarg, "r");
         unknown_words = 0;
 
         search = clock();
@@ -105,49 +108,56 @@ int main(int argc, char *argv[])
         search = clock() - search;
 
         fclose(c_file);
-
         fprintf(stderr, "Fill time\t: %f\n", (fill) / (double)CLOCKS_PER_SEC);
 
-        fprintf(stderr, "Search time\t: %f\n", (search) / 
-            (double)CLOCKS_PER_SEC);
-            
+        fprintf(stderr, "Search time\t: %f\n",
+                (search) / (double)CLOCKS_PER_SEC);
+
         fprintf(stderr, "Unknown words = %d\n", unknown_words);
 
-        /* If -c is given, ignore -d and -o*/
-        d_option = 0;
-        o_option = 0;
-
+        /*
+         * ignore option d, o, f and operate in dictionary mode, free tree as
+         * program is terminating before EOF
+         */
+        tree_free(t);
         return EXIT_SUCCESS;
     }
 
+    /* option d*/
     if (d_option == 1)
     {
         printf("%d\n", tree_depth(t));
-        o_option = 0;
-        r_option = 0;
-        h_option = 0;
+
+        /* only perform tree depth, free tree as terminating before EOF */
+        tree_free(t);
         return EXIT_SUCCESS;
     }
 
-    if (h_option == 1)
+    /* option o & f*/
+    if (o_option == 1)
     {
-        printf("Help - A list of options and the actions they perform\n");
+        if (f_option == 0)
+        {
+            f_filename = "tree-view.dot";
+        }
+        else
+        {
+            f_filename = emalloc((strlen(optarg) + 1) * sizeof f_filename);
+            strcpy(f_filename, optarg);
+        }
 
-        printf("-c filename : Check the spelling of words in filename using ");
-        printf("words read from stdin as the dictionary.\n");
-
-        printf("-d\n");
-        printf("-f filename\n");
-        printf("-o\n");
-        printf("-r\n");
-        printf("-h\n");
-
-        return EXIT_SUCCESS;
+        o_file = open_file(f_filename, "w");
+        printf("Creating dot file '%s'\n", f_filename);
+        tree_output_dot(t, o_file);
+        fclose(o_file);
+        free(f_filename);
     }
 
+    /*
+     * perform normal operation aka (no -h, -c, -d), print tree preorder with
+     * frequencies for nodes, free tree and terminate
+     */
     tree_preorder(t, print_info);
-
     tree_free(t);
-
     return EXIT_SUCCESS;
 }

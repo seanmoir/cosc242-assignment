@@ -2,17 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "tree.h"
 #include "mylib.h"
+#include "tree.h"
 
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
-/*
+/**
+ * Tree ADT, combination BST and RBT
+ * @author Sean Moir
+ */
+
+/**
+ * @struct tree node
  * key: value
  * left: pointer to left child node
  * right: pointer to right child node
- * rbt_colour: colour of node (RED, BLACK) enum
+ * tree_colour: colour of node (RED, BLACK) enum
+ * frequency: frequency that the value occured being inserted
  */
 struct tree_node
 {
@@ -23,6 +30,7 @@ struct tree_node
     int frequency;
 };
 
+/* enum for tree type (BST, RBT) */
 static tree_t tree_type;
 
 /**
@@ -71,6 +79,11 @@ void tree_output_dot(tree t, FILE *out)
     fprintf(out, "}\n");
 }
 
+/**
+ * right rotate an RBT around a given node
+ * @param r node to rotate around
+ * @return modified tree
+ */
 static tree right_rotate(tree r)
 {
     tree temp = r->left;
@@ -79,6 +92,11 @@ static tree right_rotate(tree r)
     return temp;
 }
 
+/**
+ * left rotate an RBT around a given node
+ * @param r node to rotate around
+ * @return modified tree
+ */
 static tree left_rotate(tree r)
 {
     tree temp = r->right;
@@ -87,6 +105,12 @@ static tree left_rotate(tree r)
     return temp;
 }
 
+/**
+ * Fixes RBT violations by a mixture of right/left rotations and changing node
+ * colours
+ * @param r tree to fix violations on
+ * @return modified tree
+ */
 static tree rbt_fix(tree r)
 {
     if (IS_RED(r->left) && IS_RED(r->left->left))
@@ -158,20 +182,24 @@ static tree rbt_fix(tree r)
     return r;
 }
 
-/*returns null node to represent empty new tree*/
+/**
+ * returns empty tree
+ * @param type type of tree to create (RBT, BST)
+ * @return empty tree (NULL pointer)
+ */
 tree tree_new(tree_t type)
 {
     tree_type = type;
     return NULL;
 }
 
-/*
+/**
  * search for node based on value
  *
- * param b: (sub)tree to start at
- * param key: value to search for
+ * @param b (sub)tree to start at
+ * @param key value to search for
  *
- * return: returns 0 if not found, 1 if found
+ * @return returns 0 if not found, 1 if found
  */
 int tree_search(tree b, char *key)
 {
@@ -184,9 +212,9 @@ int tree_search(tree b, char *key)
         return 0;
     }
 
-    /* 
-     * if current nodes value is more than value being searched, then search left
-     * subtree
+    /*
+     * if current nodes value is more than value being searched, then search
+     * left subtree
      *
      * else if nodes value is less than value being searched, then search right
      * subtree
@@ -204,13 +232,13 @@ int tree_search(tree b, char *key)
     return 1;
 }
 
-/*
- * insert function 
+/**
+ * insert function
  *
- * b: (sub)tree to insert into
- * key: value to insert
+ * @param b (sub)tree to insert into
+ * @param key value to insert
  *
- * return: the modified tree
+ * @return the modified tree
  */
 tree tree_insert(tree b, char *key)
 {
@@ -228,12 +256,12 @@ tree tree_insert(tree b, char *key)
 
         b->colour = count == 0 ? BLACK : RED;
         count++;
-        return tree_type == RBT ?  rbt_fix(b) : b;
+        return tree_type == RBT ? rbt_fix(b) : b;
     }
 
-    /* 
+    /*
      * if current nodes value is more than value being inserted, then insert
-     * into  left subtree, 
+     * into  left subtree,
      *
      * else if nodes value is less than value being inserted, then insert into
      * right subtree
@@ -252,14 +280,14 @@ tree tree_insert(tree b, char *key)
     }
 
     /* return modified tree */
-    return tree_type == RBT ?  rbt_fix(b) : b;
+    return tree_type == RBT ? rbt_fix(b) : b;
 }
 
-/*
+/**
  * print function for inorder printing
  *
- * b: (sub)tree to print
- * f: print function used
+ * @param b (sub)tree to print
+ * @param f: print function used
  */
 void tree_inorder(tree b, void f(char *s))
 {
@@ -279,11 +307,11 @@ void tree_inorder(tree b, void f(char *s))
     tree_inorder(b->right, f);
 }
 
-/*
+/**
  * print function for preorder printing
  *
- * b: (sub)tree to print
- * f: print function used
+ * @param b: (sub)tree to print
+ * @param f: print function used
  */
 void tree_preorder(tree b, void f(int freq, char *word))
 {
@@ -303,13 +331,14 @@ void tree_preorder(tree b, void f(int freq, char *word))
     tree_preorder(b->right, f);
 }
 
-/*
+/**
  * tree destruction function
  * frees nodes and nodes key recursively
  *
- * b: node to free
+ * @param b: node to free
  *
- * return: null pointer - for checking purposes (could be void function otherwise)
+ * @return null pointer - for checking purposes (could be void function
+ * otherwise)
  */
 tree tree_free(tree b)
 {
@@ -329,6 +358,11 @@ tree tree_free(tree b)
     return b;
 }
 
+/**
+ * calculates max tree depth
+ * @param t tree to calculate depth on
+ * @return max length
+ */
 int tree_depth(tree t)
 {
     int left, right, depth = 0;
