@@ -10,11 +10,13 @@
 
 /**
  * Tree ADT, combination BST and RBT
+ * 
  * @author Sean Moir
  */
 
 /**
  * @struct tree node
+ * 
  * key: value
  * left: pointer to left child node
  * right: pointer to right child node
@@ -81,6 +83,7 @@ void tree_output_dot(tree t, FILE *out)
 
 /**
  * right rotate an RBT around a given node
+ * 
  * @param r node to rotate around
  * @return modified tree
  */
@@ -94,6 +97,7 @@ static tree right_rotate(tree r)
 
 /**
  * left rotate an RBT around a given node
+ * 
  * @param r node to rotate around
  * @return modified tree
  */
@@ -108,6 +112,7 @@ static tree left_rotate(tree r)
 /**
  * Fixes RBT violations by a mixture of right/left rotations and changing node
  * colours
+ * 
  * @param r tree to fix violations on
  * @return modified tree
  */
@@ -184,6 +189,7 @@ static tree rbt_fix(tree r)
 
 /**
  * returns empty tree
+ * 
  * @param type type of tree to create (RBT, BST)
  * @return empty tree (NULL pointer)
  */
@@ -360,6 +366,7 @@ tree tree_free(tree b)
 
 /**
  * calculates max tree depth
+ * 
  * @param t tree to calculate depth on
  * @return max length
  */

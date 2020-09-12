@@ -7,9 +7,16 @@
 
 /**
  * Containers helper functions used in main program and ADT
+ * 
  * @author Jakob Harvey
  */
 
+/**
+ * Error checking memory allocation function
+ * 
+ * @param s size of contiguous memory needed
+ * @return pointer to location in memory
+ */
 void *emalloc(size_t s)
 {
     void *result = malloc(s);
@@ -21,6 +28,14 @@ void *emalloc(size_t s)
     return result;
 }
 
+/**
+ * Error checking memory reallocation function
+ * 
+ * @param s size of contiguous memory needed
+ * @param p original memory pointer
+ * 
+ * @return pointer to new location in memory
+ */
 void *erealloc(void *p, size_t s)
 {
     void *result = realloc(p, s);
@@ -32,6 +47,15 @@ void *erealloc(void *p, size_t s)
     return result;
 }
 
+/**
+ * Provided function, reads in words
+ * 
+ * @param s output string
+ * @param limit string limit
+ * @param stream input stream/file
+ * 
+ * @return number words read
+ */
 int getword(char *s, int limit, FILE *stream)
 {
     int c;
@@ -67,6 +91,14 @@ int getword(char *s, int limit, FILE *stream)
     return w - s;
 }
 
+/**
+ * Error checking file read/write function
+ * 
+ * @param filename name of file
+ * @arg read/write argument
+ * 
+ * @return file pointer
+ */
 FILE *open_file(char *filename, char *arg)
 {
     FILE *result;

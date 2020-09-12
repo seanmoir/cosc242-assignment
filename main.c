@@ -10,6 +10,7 @@
 /**
  * Main program file, managing command line arguments and interfacing with Tree
  * ADT
+ * 
  * @author Sean Moir
  * @author Jakob Harbey
  * @author Fin Mountford
