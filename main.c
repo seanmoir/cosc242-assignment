@@ -7,10 +7,6 @@
 #include "tree.h"
 #include "mylib.h"
 
-static void print_info(int freq, char *word) {
-    printf("%-4d %s\n", freq, word);
-}
-
 int main(int argc, char *argv[]) {
 
     const char *optstring = "c:df:orh";
@@ -69,6 +65,7 @@ int main(int argc, char *argv[]) {
     fill_end = clock();
 
     /* option c*/
+    
     if (c_option == 1) {      
         unknown_words = 0;
 
@@ -93,6 +90,7 @@ int main(int argc, char *argv[]) {
         d_option = 0;
         o_option = 0;        
     }
+    
 
     if (d_option == 1) {
         printf("%d\n", tree_depth(t));
