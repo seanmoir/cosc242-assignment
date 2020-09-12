@@ -1,15 +1,14 @@
-#include <stdio.h>
+include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
 
 #include "mylib.h"
 
-
 void *emalloc(size_t s) {
     void *result = malloc(s);
     if (result == NULL) {
-        fprintf(stderr, "memory allocation failed");
+        fprintf(stderr, "Memory allocation failed!");
         exit(EXIT_FAILURE);
     }
     return result;
@@ -18,21 +17,11 @@ void *emalloc(size_t s) {
 void *erealloc(void *p, size_t s) {
     void *result = realloc(p, s);
     if (result == NULL) {
-        fprintf(stderr, "memory allocation failed");
+        fprintf(stderr, "Memory allocation failed!");
         exit(EXIT_FAILURE);
     }
     return result;
 }
-
-
-unsigned int word_to_int(char *word) {
-    unsigned int result = 0;
-    while (*word != '\0') {
-        result = (*word++ + 31 * result);
-    }
-    return result;
-}
-
 
 int getword(char *s, int limit, FILE *stream) {
     int c;
@@ -56,4 +45,13 @@ int getword(char *s, int limit, FILE *stream) {
     }
     *w = '\0';
     return w - s;
+}
+
+FILE *open_file(char *filename, char *arg) {
+    FILE *result;
+    if (NULL == (result = fopen(filename, arg))) {
+        fprintf(stderr, "Can't find file '%s'\n", filename);
+        exit(EXIT_FAILURE);
+    }
+    return result;
 }
