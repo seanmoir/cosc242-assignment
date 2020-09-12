@@ -19,7 +19,7 @@ struct tree_node
     char *key;
     tree left;
     tree right;
-    rbt_colour colour;
+    tree_colour colour;
     int frequency;
 };
 

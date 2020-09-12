@@ -1,5 +1,6 @@
 #ifndef TREE_H_
 #define TREE_H_
+#include <stdio.h>
 
 typedef struct tree_node *tree;
 typedef enum { RED, BLACK} tree_colour;

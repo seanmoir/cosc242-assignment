@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     int unknown_words;
     FILE *c_file;
     FILE *f_file;
+    FILE *d_file;
     clock_t fill_start, fill_end, search_start, search_end;
 
     while ((option = getopt(argc, argv, optstring)) != EOF) {
@@ -117,7 +118,23 @@ int main(int argc, char *argv[]) {
     }
 
     if (o_option == 1) {
-        /*do dot stuff*/
+        /* note: you can use
+           dot -Tpdf < tree-view.dot > tree-view.pdf
+           in terminal to check out the file */
+        input = emalloc(100 * sizeof input);
+        
+        /* Insert stdin to tree*/
+        while (getword(input, 99, stdin) != EOF) {
+            t = tree_insert(t, input);
+            
+        }
+
+        /* FILE */
+        
+        d_file = fopen("./tree-view.dot", "w");
+        tree_output_dot(t, d_file);
+
+        
         if (f_option == 1) {           
         } else {
         }
