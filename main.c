@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     int c_option = 0, d_option = 0, f_option = 0,
         o_option = 0, r_option = 0, h_option = 0;
     int unknown_words;
-    FILE *c_file;
+    FILE *c_file = NULL;
     FILE *o_file;
     clock_t fill_start, fill_end, search_start, search_end;
 
@@ -65,7 +65,6 @@ int main(int argc, char *argv[]) {
     fill_end = clock();
 
     /* option c*/
-    
     if (c_option == 1) {      
         unknown_words = 0;
 
@@ -90,7 +89,6 @@ int main(int argc, char *argv[]) {
         d_option = 0;
         o_option = 0;        
     }
-    
 
     if (d_option == 1) {
         printf("%d\n", tree_depth(t));
