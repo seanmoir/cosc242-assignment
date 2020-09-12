@@ -10,7 +10,7 @@
 /**
  * Main program file, managing command line arguments and interfacing with Tree
  * ADT
- * 
+ *
  * @author Sean Moir
  * @author Jakob Harbey
  * @author Fin Mountford
@@ -26,27 +26,59 @@ static void print_info(int freq, char *word)
     printf("%-4d %s\n", freq, word);
 }
 
+/**
+ * Free's all resources used by the main program, called before returning from
+ * main
+ * 
+ * @param c_file -c arguement file pointer
+ * @param o_file -o arguement file pointer
+ * @param t tree ADT
+ * @param f_filename -f arguement filename
+ */
+void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
+{
+    if (c_file != NULL)
+    {
+        fclose(c_file);
+    }
+    if (o_file != NULL)
+    {
+        fclose(o_file);
+    }
+    if (strcmp(f_filename, "") != 0)
+    {
+        free(f_filename);
+    }
+    if(t != NULL)
+    {
+        tree_free(t);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     const char *optstring = "c:df:orh";
-    char option, input[255], *f_filename;
+    char option, input[255], *f_filename = "";
     int c_option, d_option, f_option, o_option, r_option, h_option;
     int unknown_words;
-    FILE *c_file, *o_file;
+    FILE *c_file = NULL, *o_file = NULL;
     clock_t fill, search;
-    tree t;
+    tree t = NULL;
 
     while ((option = getopt(argc, argv, optstring)) != EOF)
     {
         switch (option)
         {
         case 'c':
+            c_file = open_file(optarg, "r");
             c_option = 1;
             break;
         case 'd':
             d_option = 1;
             break;
         case 'f':
+            f_filename = emalloc((strlen(optarg) + 1) * sizeof f_filename);
+            strcpy(f_filename, optarg);
             f_option = 1;
             break;
         case 'o':
@@ -75,8 +107,9 @@ int main(int argc, char *argv[])
         printf("-h\n");
 
         /* dont create tree or add any values as help menu was invoked, print
-         * help menu and terminate 
+         * help menu and terminate
          */
+        free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
     }
 
@@ -94,7 +127,6 @@ int main(int argc, char *argv[])
     /* option c*/
     if (c_option == 1)
     {
-        c_file = open_file(optarg, "r");
         unknown_words = 0;
 
         search = clock();
@@ -108,7 +140,6 @@ int main(int argc, char *argv[])
         }
         search = clock() - search;
 
-        fclose(c_file);
         fprintf(stderr, "Fill time\t: %f\n", (fill) / (double)CLOCKS_PER_SEC);
 
         fprintf(stderr, "Search time\t: %f\n",
@@ -120,7 +151,7 @@ int main(int argc, char *argv[])
          * ignore option d, o, f and operate in dictionary mode, free tree as
          * program is terminating before EOF
          */
-        tree_free(t);
+        free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
     }
 
@@ -130,7 +161,7 @@ int main(int argc, char *argv[])
         printf("%d\n", tree_depth(t));
 
         /* only perform tree depth, free tree as terminating before EOF */
-        tree_free(t);
+        free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
     }
 
@@ -141,17 +172,10 @@ int main(int argc, char *argv[])
         {
             f_filename = "tree-view.dot";
         }
-        else
-        {
-            f_filename = emalloc((strlen(optarg) + 1) * sizeof f_filename);
-            strcpy(f_filename, optarg);
-        }
 
         o_file = open_file(f_filename, "w");
         printf("Creating dot file '%s'\n", f_filename);
         tree_output_dot(t, o_file);
-        fclose(o_file);
-        free(f_filename);
     }
 
     /*
@@ -159,6 +183,6 @@ int main(int argc, char *argv[])
      * frequencies for nodes, free tree and terminate
      */
     tree_preorder(t, print_info);
-    tree_free(t);
+    free_resources(c_file, o_file, t, f_filename);
     return EXIT_SUCCESS;
 }
