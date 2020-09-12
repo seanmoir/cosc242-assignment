@@ -8,7 +8,6 @@
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
-typedef enum { RED, BLACK} tree_colour;
 /*
  * key: value
  * left: pointer to left child node
@@ -34,19 +33,19 @@ static tree_t tree_type;
  * @param out the stream to write the DOT output to.
  */
 static void tree_output_dot_aux(tree t, FILE *out) {
-    if(t->key != NULL) {
-        fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
-                t->key, t->key, t->frequency,
-                (RBT == tree_type && RED == t->colour) ? "red":"black");
-    }
-    if(t->left != NULL) {
-        tree_output_dot_aux(t->left, out);
-        fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
-    }
-    if(t->right != NULL) {
-        tree_output_dot_aux(t->right, out);
-        fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
-    }
+   if(t->key != NULL) {
+      fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
+              t->key, t->key, t->frequency,
+              (RBT == tree_type && RED == t->colour) ? "red":"black");
+   }
+   if(t->left != NULL) {
+      tree_output_dot_aux(t->left, out);
+      fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
+   }
+   if(t->right != NULL) {
+      tree_output_dot_aux(t->right, out);
+      fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
+   }
 }
 
 /**
@@ -62,9 +61,9 @@ static void tree_output_dot_aux(tree t, FILE *out) {
  * @param out the stream to write the DOT description to.
  */
 void tree_output_dot(tree t, FILE *out) {
-    fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
-    tree_output_dot_aux(t, out);
-    fprintf(out, "}\n");
+   fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
+   tree_output_dot_aux(t, out);
+   fprintf(out, "}\n");
 }
 
 static tree right_rotate(tree r)
@@ -86,71 +85,71 @@ static tree left_rotate(tree r)
 static tree rbt_fix(tree r)
 {
     if (IS_RED(r->left) && IS_RED(r->left->left))
-        {
+    {
 
-            if (IS_RED(r->right))
-                {
-                    r->colour = RED;
-                    r->left->colour = BLACK;
-                    r->right->colour = BLACK;
-                }
-            else
-                {
-                    r = right_rotate(r);
-                    r->colour = BLACK;
-                    r->right->colour = RED;
-                }
+        if (IS_RED(r->right))
+        {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         }
+        else
+        {
+            r = right_rotate(r);
+            r->colour = BLACK;
+            r->right->colour = RED;
+        }
+    }
     else if (IS_RED(r->left) && IS_RED(r->left->right))
-        {
+    {
 
-            if (IS_RED(r->right))
-                {
-                    r->colour = RED;
-                    r->left->colour = BLACK;
-                    r->right->colour = BLACK;
-                }
-            else
-                {
-                    r->left = left_rotate(r->left);
-                    r = right_rotate(r);
-                    r->colour = BLACK;
-                    r->right->colour = RED;
-                }
+        if (IS_RED(r->right))
+        {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         }
+        else
+        {
+            r->left = left_rotate(r->left);
+            r = right_rotate(r);
+            r->colour = BLACK;
+            r->right->colour = RED;
+        }
+    }
     else if (IS_RED(r->right) && IS_RED(r->right->left))
-        {
+    {
 
-            if (IS_RED(r->left))
-                {
-                    r->colour = RED;
-                    r->left->colour = BLACK;
-                    r->right->colour = BLACK;
-                }
-            else
-                {
-                    r->right = right_rotate(r->right);
-                    r = left_rotate(r);
-                    r->colour = BLACK;
-                    r->left->colour = RED;
-                }
+        if (IS_RED(r->left))
+        {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         }
+        else
+        {
+            r->right = right_rotate(r->right);
+            r = left_rotate(r);
+            r->colour = BLACK;
+            r->left->colour = RED;
+        }
+    }
     else if (IS_RED(r->right) && IS_RED(r->right->right))
-        {
+    {
 
-            if (IS_RED(r->left))
-                {
-                    r->colour = RED;
-                    r->left->colour = BLACK;
-                    r->right->colour = BLACK;
-                }
-            else
-                {
-                    r = left_rotate(r);
-                    r->colour = BLACK;
-                    r->left->colour = RED;
-                }
+        if (IS_RED(r->left))
+        {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         }
+        else
+        {
+            r = left_rotate(r);
+            r->colour = BLACK;
+            r->left->colour = RED;
+        }
+    }
     return r;
 }
 
@@ -176,9 +175,9 @@ int tree_search(tree b, char *key)
      * return 0 for false
      */
     if (b == NULL)
-        {
-            return 0;
-        }
+    {
+        return 0;
+    }
 
     /* 
      * if current nodes value is more than value being searched, then search left
@@ -188,13 +187,13 @@ int tree_search(tree b, char *key)
      * subtree
      */
     if (strcmp(b->key, key) > 0)
-        {
-            return tree_search(b->left, key);
-        }
+    {
+        return tree_search(b->left, key);
+    }
     else if (strcmp(b->key, key) < 0)
-        {
-            return tree_search(b->right, key);
-        }
+    {
+        return tree_search(b->right, key);
+    }
 
     /* value found, return 1 for true */
     return 1;
@@ -214,19 +213,22 @@ tree tree_insert(tree b, char *key)
 
     /*if leaf is found allocate new node and insert value into node */
     if (b == NULL)
-        {
-            b = emalloc(sizeof *b);
-            b->left = NULL;
-            b->right = NULL;
-            b->key = emalloc((strlen(key) + 1) * sizeof key[0]);
-            b->key = strcpy(b->key, key);
-            b->frequency = 1;
+    {
+        b = emalloc(sizeof *b);
+        b->left = NULL;
+        b->right = NULL;
+        b->key = emalloc((strlen(key) + 1) * sizeof key[0]);
+        b->key = strcpy(b->key, key);
+        b->frequency = 1;
         
-            b->colour = count == 0 ? BLACK : RED;
-            count++;
-            
-            return b;
+        b->colour = count == 0 ? BLACK : RED;
+        count++;
+        if (tree_type == RBT)
+        {
+            return rbt_fix(b);
         }
+        return b;
+    }
 
     /* 
      * if current nodes value is more than value being inserted, then insert
@@ -236,19 +238,21 @@ tree tree_insert(tree b, char *key)
      * right subtree
      */
     if (strcmp(b->key, key) > 0)
-        {
-            b->left = tree_insert(b->left, key);
-        }
+    {
+        b->left = tree_insert(b->left, key);
+    }
     else if (strcmp(b->key, key) < 0)
-        {
-            b->right = tree_insert(b->right, key);
-        }
-    else {
-            b->frequency++;
-        }
+    {
+        b->right = tree_insert(b->right, key);
+    }
+    else
+    {
+        b->frequency++;
+    }
 
     /* return modified tree */
-    if (tree_type == RBT){
+    if (tree_type == RBT)
+    {
         return rbt_fix(b);
     }
     return b;
@@ -260,19 +264,19 @@ tree tree_insert(tree b, char *key)
  * b: (sub)tree to print
  * f: print function used
  */
-void tree_inorder(tree b, void f(int freq, char *s))
+void tree_inorder(tree b, void f(char *s))
 {
     /* if leaf then return to stack */
     if (b == NULL)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     /* call self on left subtree recursively */
     tree_inorder(b->left, f);
 
     /* call print method on current node */
-    f(b->frequency, b->key);
+    f(b->key);
 
     /* call self on right subtree recursively */
     tree_inorder(b->right, f);
@@ -288,9 +292,9 @@ void tree_preorder(tree b, void f(int freq, char *word))
 {
     /* if leaf then return to stack */
     if (b == NULL)
-        {
-            return;
-        }
+    {
+        return;
+    }
 
     /* call print method on current node */
     f(b->frequency, b->key);
@@ -314,9 +318,9 @@ tree tree_free(tree b)
 {
     /* if leaf met return to stack */
     if (b == NULL)
-        {
-            return b;
-        }
+    {
+        return b;
+    }
 
     /* free left and right subtrees recursively */
     tree_free(b->left);
@@ -328,19 +332,40 @@ tree tree_free(tree b)
     return b;
 }
 
-int tree_depth(tree t) {
-    int left_depth, right_depth;
-    
-    if (t == NULL) {
-        return -1;
-    }
-    
-    left_depth = tree_depth(t->left);
-    right_depth = tree_depth(t->right);
+int tree_depth(tree t)
+{
+    int left, right, depth = 0;
 
-    if (left_depth > right_depth) {
-        return left_depth + 1;
-    } else {
-        return right_depth + 1;
+    if(t == NULL)
+    {
+        return depth;
+    }
+
+    if(t->left == NULL)
+    {
+        left = 0;
+    }
+    else
+    {
+        left = tree_depth(t->left);
+    }
+
+
+    if(t->right == NULL)
+    {
+        right = 0;
+    }
+    else
+    {
+        right = tree_depth(t->left);
+    }
+
+    if(right > left)
+    {
+        return 1 + right;
+    }
+    else
+    {
+        return 1 + left;
     }
 }
