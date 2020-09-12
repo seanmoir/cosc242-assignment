@@ -32,20 +32,24 @@ static tree_t tree_type;
  * @param t the tree to output a DOT description of.
  * @param out the stream to write the DOT output to.
  */
-static void tree_output_dot_aux(tree t, FILE *out) {
-   if(t->key != NULL) {
-      fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
-              t->key, t->key, t->frequency,
-              (RBT == tree_type && RED == t->colour) ? "red":"black");
-   }
-   if(t->left != NULL) {
-      tree_output_dot_aux(t->left, out);
-      fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
-   }
-   if(t->right != NULL) {
-      tree_output_dot_aux(t->right, out);
-      fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
-   }
+static void tree_output_dot_aux(tree t, FILE *out)
+{
+    if (t->key != NULL)
+    {
+        fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
+                t->key, t->key, t->frequency,
+                (RBT == tree_type && RED == t->colour) ? "red" : "black");
+    }
+    if (t->left != NULL)
+    {
+        tree_output_dot_aux(t->left, out);
+        fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
+    }
+    if (t->right != NULL)
+    {
+        tree_output_dot_aux(t->right, out);
+        fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
+    }
 }
 
 /**
@@ -60,10 +64,11 @@ static void tree_output_dot_aux(tree t, FILE *out) {
  * @param t the tree to output the DOT description of.
  * @param out the stream to write the DOT description to.
  */
-void tree_output_dot(tree t, FILE *out) {
-   fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
-   tree_output_dot_aux(t, out);
-   fprintf(out, "}\n");
+void tree_output_dot(tree t, FILE *out)
+{
+    fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
+    tree_output_dot_aux(t, out);
+    fprintf(out, "}\n");
 }
 
 static tree right_rotate(tree r)
@@ -220,14 +225,10 @@ tree tree_insert(tree b, char *key)
         b->key = emalloc((strlen(key) + 1) * sizeof key[0]);
         b->key = strcpy(b->key, key);
         b->frequency = 1;
-        
+
         b->colour = count == 0 ? BLACK : RED;
         count++;
-        if (tree_type == RBT)
-        {
-            return rbt_fix(b);
-        }
-        return b;
+        return tree_type == RBT ?  rbt_fix(b) : b;
     }
 
     /* 
@@ -251,11 +252,7 @@ tree tree_insert(tree b, char *key)
     }
 
     /* return modified tree */
-    if (tree_type == RBT)
-    {
-        return rbt_fix(b);
-    }
-    return b;
+    return tree_type == RBT ?  rbt_fix(b) : b;
 }
 
 /*
@@ -336,12 +333,12 @@ int tree_depth(tree t)
 {
     int left, right, depth = 0;
 
-    if(t == NULL)
+    if (t == NULL)
     {
         return depth;
     }
 
-    if(t->left == NULL)
+    if (t->left == NULL)
     {
         left = 0;
     }
@@ -350,8 +347,7 @@ int tree_depth(tree t)
         left = tree_depth(t->left);
     }
 
-
-    if(t->right == NULL)
+    if (t->right == NULL)
     {
         right = 0;
     }
@@ -360,7 +356,7 @@ int tree_depth(tree t)
         right = tree_depth(t->left);
     }
 
-    if(right > left)
+    if (right > left)
     {
         return 1 + right;
     }
