@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
     {
         t = tree_insert(t, input);
     }
+    t = set_black_root(t);
     fill = clock() - fill;
 
     /* option c*/

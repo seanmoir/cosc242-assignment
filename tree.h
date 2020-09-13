@@ -9,6 +9,7 @@ typedef enum tree_e { BST, RBT } tree_t;
 extern tree tree_new(tree_t type);
 extern tree tree_free(tree b);
 extern tree tree_insert(tree b, char *key);
+extern tree set_black_root(tree t);
 extern int tree_search(tree b, char *key);
 extern void tree_inorder(tree b, void f(char *s));
 extern void tree_preorder(tree b, void f(int freq, char *word));

@@ -248,7 +248,6 @@ int tree_search(tree b, char *key)
  */
 tree tree_insert(tree b, char *key)
 {
-    static int count = 0;
 
     /*if leaf is found allocate new node and insert value into node */
     if (b == NULL)
@@ -260,8 +259,7 @@ tree tree_insert(tree b, char *key)
         b->key = strcpy(b->key, key);
         b->frequency = 1;
 
-        b->colour = count == 0 ? BLACK : RED;
-        count++;
+        b->colour = RED;
         return tree_type == RBT ? rbt_fix(b) : b;
     }
 
@@ -287,6 +285,18 @@ tree tree_insert(tree b, char *key)
 
     /* return modified tree */
     return tree_type == RBT ? rbt_fix(b) : b;
+}
+
+/**
+ * Sets root node to black
+ * 
+ * @param t root node pointer in tree
+ * @return fixed tree
+ */
+tree set_black_root(tree t)
+{
+    t->colour = BLACK;
+    return rbt_fix(t);
 }
 
 /**
