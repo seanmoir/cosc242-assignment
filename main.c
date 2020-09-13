@@ -127,7 +127,10 @@ int main(int argc, char *argv[])
     {
         t = tree_insert(t, input);
     }
-    t = set_black_root(t);
+    if(r_option == 1)
+    {
+        t = set_black_root(t);
+    }
     fill = clock() - fill;
 
     /* option c*/
