@@ -95,21 +95,21 @@ int main(int argc, char *argv[])
     /* option h */
     if (h_option == 1)
     {
-        printf("Help - A list of options and the actions they perform\n");
+        printf("Help - A list of options and the actions they perform\n\n");
 
-        printf("-c <filename>: Check the spelling of words in filename using");
-        printf(" words read from stdin as the dictionary.\n");
+        printf("-c\t<filename>\tCheck the spelling of words in filename ");
+        printf("using words read from stdin as the dictionary.\n");
 
-        printf("-d: Display the height of the tree after insertion\n");
+        printf("-d\t\t\tDisplay the height of the tree after insertion\n");
 
-        printf("-f <filename>: output dot notation of tree to <filename> ");
+        printf("-f\t<filename>\toutput dot notation of tree to <filename> ");
         printf("used in combination with -o\n");
 
-        printf("-o: output dot notation of tree to ./tree-view.dot unless ");
-        printf("specified otherwise by -f\n");
+        printf("-o\t\t\toutput dot notation of tree to ./tree-view.dot ");
+        printf("unless specified otherwise by -f\n");
 
-        printf("-r: Use RBT for data over BST \n");
-        printf("-h: Help menu\n");
+        printf("-r\t\t\tUse RBT for data over BST \n");
+        printf("-h\t\t\tHelp menu\n");
 
         /* dont create tree or add any values as help menu was invoked, print
          * help menu, free any resources and terminate
