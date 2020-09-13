@@ -45,7 +45,7 @@ void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
     {
         fclose(o_file);
     }
-    if (strcmp(f_filename, "") != 0)
+    if (strcmp(f_filename, "") != 0 && f_filename)
     {
         free(f_filename);
     }
