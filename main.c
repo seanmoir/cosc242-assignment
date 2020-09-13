@@ -29,7 +29,7 @@ static void print_info(int freq, char *word)
 /**
  * Free's all resources used by the main program, called before returning from
  * main
- * 
+ *
  * @param c_file -c arguement file pointer
  * @param o_file -o arguement file pointer
  * @param t tree ADT
@@ -49,7 +49,7 @@ void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
     {
         free(f_filename);
     }
-    if(t != NULL)
+    if (t != NULL)
     {
         tree_free(t);
     }
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
         printf("-h\n");
 
         /* dont create tree or add any values as help menu was invoked, print
-         * help menu and terminate
+         * help menu, free any resources and terminate
          */
         free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
@@ -148,8 +148,8 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Unknown words = %d\n", unknown_words);
 
         /*
-         * ignore option d, o, f and operate in dictionary mode, free tree as
-         * program is terminating before EOF
+         * ignore option d, o, f and operate in dictionary mode, free resoucrces
+         * as program is terminating before EOF
          */
         free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     {
         printf("%d\n", tree_depth(t));
 
-        /* only perform tree depth, free tree as terminating before EOF */
+        /* only perform tree depth, free resources as terminating before EOF */
         free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
     }
@@ -172,7 +172,6 @@ int main(int argc, char *argv[])
         {
             f_filename = "tree-view.dot";
         }
-
         o_file = open_file(f_filename, "w");
         printf("Creating dot file '%s'\n", f_filename);
         tree_output_dot(t, o_file);
@@ -180,7 +179,7 @@ int main(int argc, char *argv[])
 
     /*
      * perform normal operation aka (no -h, -c, -d), print tree preorder with
-     * frequencies for nodes, free tree and terminate
+     * frequencies for nodes, free resources and terminate
      */
     tree_preorder(t, print_info);
     free_resources(c_file, o_file, t, f_filename);
