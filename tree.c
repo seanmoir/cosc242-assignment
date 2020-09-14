@@ -382,37 +382,18 @@ tree tree_free(tree b)
  */
 int tree_depth(tree t)
 {
-    int left, right, depth = 0;
+    int left_depth, right_depth;
+    
+    if (t == NULL) {
+        return -1;
+    }
+    
+    left_depth = tree_depth(t->left);
+    right_depth = tree_depth(t->right);
 
-    if (t == NULL)
-    {
-        return depth;
-    }
-
-    if (t->left == NULL)
-    {
-        left = 0;
-    }
-    else
-    {
-        left = tree_depth(t->left);
-    }
-
-    if (t->right == NULL)
-    {
-        right = 0;
-    }
-    else
-    {
-        right = tree_depth(t->left);
-    }
-
-    if (right > left)
-    {
-        return 1 + right;
-    }
-    else
-    {
-        return 1 + left;
+    if (left_depth > right_depth) {
+        return left_depth + 1;
+    } else {
+        return right_depth + 1;
     }
 }
