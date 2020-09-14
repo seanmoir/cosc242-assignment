@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
     }
 
     /*
-     * perform normal operation aka (no -h, -c, -d), print tree preorder with
+     * perform normal operation aka (no -h, -c, -d, -o), print tree preorder with
      * frequencies for nodes, free resources and terminate
      */
     tree_preorder(t, print_info);
