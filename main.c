@@ -37,29 +37,33 @@ static void print_info(int freq, char *word)
  */
 void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
 {
-    if (c_file != NULL)
+    if (c_file)
     {
         fclose(c_file);
+        c_file = NULL;
     }
-    if (o_file != NULL)
+    if (o_file)
     {
         fclose(o_file);
+        o_file = NULL;
     }
-    if (strcmp(f_filename, "\0") != 0 && f_filename)
+    if (f_filename)
     {
         free(f_filename);
+        f_filename = NULL;
     }
-    if (t != NULL)
+    if (t)
     {
         tree_free(t);
+        t = NULL;
     }
 }
 
 int main(int argc, char *argv[])
 {
     const char *optstring = "c:df:orh";
-    char option = '\0';
-    char input[255] = "\0", *f_filename = "\0";
+    char option;
+    char input[255], *f_filename = NULL;
     int c_option = 0, d_option = 0, f_option = 0;
     int o_option = 0, r_option = 0, h_option = 0;
     int unknown_words = 0;
@@ -79,7 +83,7 @@ int main(int argc, char *argv[])
             d_option = 1;
             break;
         case 'f':
-            f_filename = emalloc((strlen(optarg) + 1) * sizeof f_filename);
+            f_filename = emalloc((strlen(optarg) + 1) * sizeof f_filename[0]);
             strcpy(f_filename, optarg);
             f_option = 1;
             break;
@@ -181,11 +185,14 @@ int main(int argc, char *argv[])
     {
         if (f_option == 0)
         {
-            f_filename = "tree-view.dot";
+            f_filename = emalloc(14 * sizeof f_filename[0]);
+            strcpy(f_filename, "tree-view.dot");
         }
         o_file = open_file(f_filename, "w");
         printf("Creating dot file '%s'\n", f_filename);
         tree_output_dot(t, o_file);
+        free_resources(c_file, o_file, t, f_filename);
+        return EXIT_SUCCESS;
     }
 
     /*
