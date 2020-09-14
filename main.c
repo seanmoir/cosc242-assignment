@@ -58,8 +58,10 @@ void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
 int main(int argc, char *argv[])
 {
     const char *optstring = "c:df:orh";
-    char option, input[255], *f_filename = "";
-    int c_option, d_option, f_option, o_option, r_option, h_option;
+    char option;
+    char input[255], *f_filename = "";
+    int c_option = 0, d_option = 0, f_option = 0,
+    o_option = 0, r_option = 0, h_option = 0;
     int unknown_words;
     FILE *c_file = NULL, *o_file = NULL;
     clock_t fill, search;
