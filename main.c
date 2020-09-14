@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Search time\t: %f\n",
                 (search) / (double)CLOCKS_PER_SEC);
 
-        fprintf(stderr, "Unknown words = %d\n", unknown_words);
+        fprintf(stderr, "Unknown words\t= %d\n", unknown_words);
 
         /*
          * ignore option d, o, f and operate in dictionary mode, free resoucrces
