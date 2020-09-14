@@ -45,7 +45,7 @@ void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
     {
         fclose(o_file);
     }
-    if (strcmp(f_filename, "") != 0 && f_filename)
+    if (strcmp(f_filename, "\0") != 0 && f_filename)
     {
         free(f_filename);
     }
@@ -58,13 +58,13 @@ void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
 int main(int argc, char *argv[])
 {
     const char *optstring = "c:df:orh";
-    char option;
-    char input[255], *f_filename = "";
-    int c_option = 0, d_option = 0, f_option = 0,
-    o_option = 0, r_option = 0, h_option = 0;
-    int unknown_words;
+    char option = '\0';
+    char input[255] = "\0", *f_filename = "\0";
+    int c_option = 0, d_option = 0, f_option = 0;
+    int o_option = 0, r_option = 0, h_option = 0;
+    int unknown_words = 0;
     FILE *c_file = NULL, *o_file = NULL;
-    clock_t fill, search;
+    clock_t fill = -1, search = -1;
     tree t = NULL;
 
     while ((option = getopt(argc, argv, optstring)) != EOF)
