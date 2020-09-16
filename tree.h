@@ -2,9 +2,30 @@
 #define TREE_H_
 #include <stdio.h>
 
+/**
+ * Tree header file
+ * 
+ * @author Sean Moir
+ * @author Jakbo Harvey
+ */
+
 typedef struct tree_node *tree;
-typedef enum { RED, BLACK} tree_colour;
-typedef enum tree_e { BST, RBT } tree_t;
+
+/**
+ * @enum tree colour
+ */
+typedef enum { 
+    RED, /* Red node */
+    BLACK /* Black node */
+} tree_colour;
+
+/**
+ * @enum tree type
+ */
+typedef enum tree_e { 
+    BST, /* BST */
+    RBT  /* RBT */
+} tree_t;
 
 extern tree tree_new(tree_t type);
 extern tree tree_free(tree b);

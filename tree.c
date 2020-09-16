@@ -17,18 +17,14 @@
 /**
  * @struct tree node
  *
- * key: value
- * left: pointer to left child node
- * right: pointer to right child node
- * tree_colour: colour of node (RED, BLACK) enum
- * frequency: frequency that the value occured being inserted
+ * A structure that represents a node in a BST or RBT
  */
 struct tree_node {
-    char *key;
-    tree left;
-    tree right;
-    tree_colour colour;
-    int frequency;
+    char *key; /* value of node */
+    tree left; /* left subtree pointer */
+    tree right; /* right subtree pointer */
+    tree_colour colour; /* node colour (RBT specific (BLACK, RED)) */
+    int frequency; /* frequency of insertion of nodes value */
 };
 
 /* enum for tree type (BST, RBT) */
