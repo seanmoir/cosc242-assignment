@@ -21,8 +21,7 @@
  * @param freq: frequency of node
  * @param word: value of node
  */
-static void print_info(int freq, char *word)
-{
+static void print_info(int freq, char *word) {
     printf("%-4d %s\n", freq, word);
 }
 
@@ -35,32 +34,26 @@ static void print_info(int freq, char *word)
  * @param t tree ADT
  * @param f_filename -f arguement filename
  */
-void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename)
-{
-    if (c_file)
-    {
+void free_resources(FILE *c_file, FILE *o_file, tree t, char *f_filename) {
+    if (c_file) {
         fclose(c_file);
         c_file = NULL;
     }
-    if (o_file)
-    {
+    if (o_file) {
         fclose(o_file);
         o_file = NULL;
     }
-    if (f_filename)
-    {
+    if (f_filename) {
         free(f_filename);
         f_filename = NULL;
     }
-    if (t)
-    {
+    if (t) {
         tree_free(t);
         t = NULL;
     }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     const char *optstring = "c:df:orh";
     char option;
     char input[255], *f_filename = NULL;
@@ -71,10 +64,8 @@ int main(int argc, char *argv[])
     clock_t fill = -1, search = -1;
     tree t = NULL;
 
-    while ((option = getopt(argc, argv, optstring)) != EOF)
-    {
-        switch (option)
-        {
+    while ((option = getopt(argc, argv, optstring)) != EOF) {
+        switch (option) {
         case 'c':
             c_file = open_file(optarg, "r");
             c_option = 1;
@@ -99,8 +90,7 @@ int main(int argc, char *argv[])
     }
 
     /* option h */
-    if (h_option == 1)
-    {
+    if (h_option == 1) {
         printf("Help - A list of options and the actions they perform\n\n");
 
         printf("-c\t<filename>\tCheck the spelling of words in filename ");
@@ -129,26 +119,21 @@ int main(int argc, char *argv[])
 
     /* Read stdin into the tree */
     fill = clock();
-    while (getword(input, sizeof input, stdin) != EOF)
-    {
+    while (getword(input, sizeof input, stdin) != EOF) {
         t = tree_insert(t, input);
     }
-    if(r_option == 1)
-    {
+    if (r_option == 1) {
         t = set_black_root(t);
     }
     fill = clock() - fill;
 
     /* option c*/
-    if (c_option == 1)
-    {
+    if (c_option == 1) {
         unknown_words = 0;
 
         search = clock();
-        while (getword(input, sizeof input, c_file) != EOF)
-        {
-            if (tree_search(t, input) == 0)
-            {
+        while (getword(input, sizeof input, c_file) != EOF) {
+            if (tree_search(t, input) == 0) {
                 fprintf(stdout, "%s\n", input);
                 unknown_words++;
             }
@@ -163,16 +148,15 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Unknown words\t= %d\n", unknown_words);
 
         /*
-         * ignore option d, o, f and operate in dictionary mode, free resoucrces
-         * as program is terminating before EOF
+         * ignore option d, o, f and operate in dictionary mode, free
+         * resources as program is terminating before EOF
          */
         free_resources(c_file, o_file, t, f_filename);
         return EXIT_SUCCESS;
     }
 
     /* option d*/
-    if (d_option == 1)
-    {
+    if (d_option == 1) {
         printf("%d\n", tree_depth(t));
 
         /* only perform tree depth, free resources as terminating before EOF */
@@ -181,10 +165,8 @@ int main(int argc, char *argv[])
     }
 
     /* option o & f*/
-    if (o_option == 1)
-    {
-        if (f_option == 0)
-        {
+    if (o_option == 1) {
+        if (f_option == 0) {
             f_filename = emalloc(14 * sizeof f_filename[0]);
             strcpy(f_filename, "tree-view.dot");
         }
@@ -196,8 +178,8 @@ int main(int argc, char *argv[])
     }
 
     /*
-     * perform normal operation aka (no -h, -c, -d, -o), print tree preorder with
-     * frequencies for nodes, free resources and terminate
+     * perform normal operation aka (no -h, -c, -d, -o), print tree preorder
+     * with frequencies for nodes, free resources and terminate
      */
     tree_preorder(t, print_info);
     free_resources(c_file, o_file, t, f_filename);

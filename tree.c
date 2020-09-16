@@ -10,21 +10,20 @@
 
 /**
  * Tree ADT, combination BST and RBT
- * 
+ *
  * @author Sean Moir
  */
 
 /**
  * @struct tree node
- * 
+ *
  * key: value
  * left: pointer to left child node
  * right: pointer to right child node
  * tree_colour: colour of node (RED, BLACK) enum
  * frequency: frequency that the value occured being inserted
  */
-struct tree_node
-{
+struct tree_node {
     char *key;
     tree left;
     tree right;
@@ -42,21 +41,17 @@ static tree_t tree_type;
  * @param t the tree to output a DOT description of.
  * @param out the stream to write the DOT output to.
  */
-static void tree_output_dot_aux(tree t, FILE *out)
-{
-    if (t->key != NULL)
-    {
+static void tree_output_dot_aux(tree t, FILE *out) {
+    if (t->key != NULL) {
         fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
                 t->key, t->key, t->frequency,
                 (RBT == tree_type && RED == t->colour) ? "red" : "black");
     }
-    if (t->left != NULL)
-    {
+    if (t->left != NULL) {
         tree_output_dot_aux(t->left, out);
         fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
     }
-    if (t->right != NULL)
-    {
+    if (t->right != NULL) {
         tree_output_dot_aux(t->right, out);
         fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
     }
@@ -74,8 +69,7 @@ static void tree_output_dot_aux(tree t, FILE *out)
  * @param t the tree to output the DOT description of.
  * @param out the stream to write the DOT description to.
  */
-void tree_output_dot(tree t, FILE *out)
-{
+void tree_output_dot(tree t, FILE *out) {
     fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
     tree_output_dot_aux(t, out);
     fprintf(out, "}\n");
@@ -83,12 +77,11 @@ void tree_output_dot(tree t, FILE *out)
 
 /**
  * right rotate an RBT around a given node
- * 
+ *
  * @param r node to rotate around
  * @return modified tree
  */
-static tree right_rotate(tree r)
-{
+static tree right_rotate(tree r) {
     tree temp = r->left;
     r->left = temp->right;
     temp->right = r;
@@ -97,12 +90,11 @@ static tree right_rotate(tree r)
 
 /**
  * left rotate an RBT around a given node
- * 
+ *
  * @param r node to rotate around
  * @return modified tree
  */
-static tree left_rotate(tree r)
-{
+static tree left_rotate(tree r) {
     tree temp = r->right;
     r->right = temp->left;
     temp->left = r;
@@ -112,73 +104,53 @@ static tree left_rotate(tree r)
 /**
  * Fixes RBT violations by a mixture of right/left rotations and changing node
  * colours
- * 
+ *
  * @param r tree to fix violations on
  * @return modified tree
  */
-static tree rbt_fix(tree r)
-{
-    if (IS_RED(r->left) && IS_RED(r->left->left))
-    {
+static tree rbt_fix(tree r) {
+    if (IS_RED(r->left) && IS_RED(r->left->left)) {
 
-        if (IS_RED(r->right))
-        {
+        if (IS_RED(r->right)) {
             r->colour = RED;
             r->left->colour = BLACK;
             r->right->colour = BLACK;
-        }
-        else
-        {
+        } else {
             r = right_rotate(r);
             r->colour = BLACK;
             r->right->colour = RED;
         }
-    }
-    else if (IS_RED(r->left) && IS_RED(r->left->right))
-    {
+    } else if (IS_RED(r->left) && IS_RED(r->left->right)) {
 
-        if (IS_RED(r->right))
-        {
+        if (IS_RED(r->right)) {
             r->colour = RED;
             r->left->colour = BLACK;
             r->right->colour = BLACK;
-        }
-        else
-        {
+        } else {
             r->left = left_rotate(r->left);
             r = right_rotate(r);
             r->colour = BLACK;
             r->right->colour = RED;
         }
-    }
-    else if (IS_RED(r->right) && IS_RED(r->right->left))
-    {
+    } else if (IS_RED(r->right) && IS_RED(r->right->left)) {
 
-        if (IS_RED(r->left))
-        {
+        if (IS_RED(r->left)) {
             r->colour = RED;
             r->left->colour = BLACK;
             r->right->colour = BLACK;
-        }
-        else
-        {
+        } else {
             r->right = right_rotate(r->right);
             r = left_rotate(r);
             r->colour = BLACK;
             r->left->colour = RED;
         }
-    }
-    else if (IS_RED(r->right) && IS_RED(r->right->right))
-    {
+    } else if (IS_RED(r->right) && IS_RED(r->right->right)) {
 
-        if (IS_RED(r->left))
-        {
+        if (IS_RED(r->left)) {
             r->colour = RED;
             r->left->colour = BLACK;
             r->right->colour = BLACK;
-        }
-        else
-        {
+        } else {
             r = left_rotate(r);
             r->colour = BLACK;
             r->left->colour = RED;
@@ -189,12 +161,11 @@ static tree rbt_fix(tree r)
 
 /**
  * returns empty tree
- * 
+ *
  * @param type type of tree to create (RBT, BST)
  * @return empty tree (NULL pointer)
  */
-tree tree_new(tree_t type)
-{
+tree tree_new(tree_t type) {
     tree_type = type;
     return NULL;
 }
@@ -207,14 +178,12 @@ tree tree_new(tree_t type)
  *
  * @return returns 0 if not found, 1 if found
  */
-int tree_search(tree b, char *key)
-{
+int tree_search(tree b, char *key) {
     /*
      * if leaf is reached and key is not found, then must not be in tree, thus
      * return 0 for false
      */
-    if (b == NULL)
-    {
+    if (b == NULL) {
         return 0;
     }
 
@@ -225,12 +194,9 @@ int tree_search(tree b, char *key)
      * else if nodes value is less than value being searched, then search right
      * subtree
      */
-    if (strcmp(b->key, key) > 0)
-    {
+    if (strcmp(b->key, key) > 0) {
         return tree_search(b->left, key);
-    }
-    else if (strcmp(b->key, key) < 0)
-    {
+    } else if (strcmp(b->key, key) < 0) {
         return tree_search(b->right, key);
     }
 
@@ -246,12 +212,10 @@ int tree_search(tree b, char *key)
  *
  * @return the modified tree
  */
-tree tree_insert(tree b, char *key)
-{
+tree tree_insert(tree b, char *key) {
 
     /*if leaf is found allocate new node and insert value into node */
-    if (b == NULL)
-    {
+    if (b == NULL) {
         b = emalloc(sizeof *b);
         b->left = NULL;
         b->right = NULL;
@@ -270,16 +234,11 @@ tree tree_insert(tree b, char *key)
      * else if nodes value is less than value being inserted, then insert into
      * right subtree
      */
-    if (strcmp(b->key, key) > 0)
-    {
+    if (strcmp(b->key, key) > 0) {
         b->left = tree_insert(b->left, key);
-    }
-    else if (strcmp(b->key, key) < 0)
-    {
+    } else if (strcmp(b->key, key) < 0) {
         b->right = tree_insert(b->right, key);
-    }
-    else
-    {
+    } else {
         b->frequency++;
     }
 
@@ -289,12 +248,11 @@ tree tree_insert(tree b, char *key)
 
 /**
  * Sets root node to black
- * 
+ *
  * @param t root node pointer in tree
  * @return fixed tree
  */
-tree set_black_root(tree t)
-{
+tree set_black_root(tree t) {
     t->colour = BLACK;
     return rbt_fix(t);
 }
@@ -305,11 +263,9 @@ tree set_black_root(tree t)
  * @param b (sub)tree to print
  * @param f: print function used
  */
-void tree_inorder(tree b, void f(char *s))
-{
+void tree_inorder(tree b, void f(char *s)) {
     /* if leaf then return to stack */
-    if (b == NULL)
-    {
+    if (b == NULL) {
         return;
     }
 
@@ -329,11 +285,9 @@ void tree_inorder(tree b, void f(char *s))
  * @param b: (sub)tree to print
  * @param f: print function used
  */
-void tree_preorder(tree b, void f(int freq, char *word))
-{
+void tree_preorder(tree b, void f(int freq, char *word)) {
     /* if leaf then return to stack */
-    if (b == NULL)
-    {
+    if (b == NULL) {
         return;
     }
 
@@ -356,11 +310,9 @@ void tree_preorder(tree b, void f(int freq, char *word))
  * @return null pointer - for checking purposes (could be void function
  * otherwise)
  */
-tree tree_free(tree b)
-{
+tree tree_free(tree b) {
     /* if leaf met return to stack */
-    if (b == NULL)
-    {
+    if (b == NULL) {
         return b;
     }
 
@@ -376,18 +328,17 @@ tree tree_free(tree b)
 
 /**
  * calculates max tree depth
- * 
+ *
  * @param t tree to calculate depth on
  * @return max length
  */
-int tree_depth(tree t)
-{
+int tree_depth(tree t) {
     int left_depth, right_depth;
-    
+
     if (t == NULL) {
         return -1;
     }
-    
+
     left_depth = tree_depth(t->left);
     right_depth = tree_depth(t->right);
 
